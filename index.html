@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>薬剤師国試 法律適合性チェックツール</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: #f5f5f3; color: #1a1a1a; font-size: 14px; }
+.app { padding: 1.5rem; max-width: 1000px; margin: 0 auto; }
+h1 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: #666; margin-bottom: 1.25rem; }
+.card { background: white; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+.card-title { font-size: 14px; font-weight: 500; color: #333; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.field-lbl { font-size: 12px; font-weight: 500; color: #555; margin-bottom: 5px; display: block; }
+textarea { width: 100%; padding: 8px 12px; border: 0.5px solid #ddd; border-radius: 8px; font-size: 13px; font-family: inherit; color: #1a1a1a; background: #f9f9f7; resize: vertical; line-height: 1.6; }
+textarea:focus { outline: none; border-color: #185FA5; }
+.btn { border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+.btn-blue { background: #185FA5; color: white; } .btn-blue:hover { background: #0C447C; } .btn-blue:disabled { background: #B5D4F4; cursor: not-allowed; }
+.btn-green { background: #3B6D11; color: white; } .btn-green:hover { background: #27500A; }
+.btn-outline { background: transparent; color: #333; border: 0.5px solid #bbb; } .btn-outline:hover { background: #f0f0f0; }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.badge-ok { background: #C0DD97; color: #27500A; } .badge-ng { background: #F7C1C1; color: #791F1F; }
+.badge-warn { background: #FAC775; color: #633806; } .badge-info { background: #B5D4F4; color: #0C447C; }
+.badge-gray { background: #e0e0e0; color: #555; } .badge-set { background: #EAF3DE; color: #27500A; border: 0.5px solid #C0DD97; }
+.badge-checking { background: #FAEEDA; color: #633806; }
+.law-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 6px; margin-top: 8px; max-height: 240px; overflow-y: auto; }
+.law-item { display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; border: 0.5px solid #e0e0e0; border-radius: 8px; background: #fafafa; gap: 6px; }
+.law-item.fetched { background: #EAF3DE; border-color: #C0DD97; }
+.law-item.error-item { background: #FCEBEB; border-color: #F7C1C1; }
+.law-name { font-size: 12px; color: #333; flex: 1; line-height: 1.4; }
+.drop-zone { border: 1.5px dashed #B5D4F4; border-radius: 10px; padding: 1.5rem; text-align: center; cursor: pointer; background: #f9f9f7; }
+.drop-zone:hover, .drop-zone.dragover { background: #E6F1FB; border-color: #185FA5; }
+.drop-zone p { font-size: 13px; color: #555; margin-bottom: 4px; }
+.drop-zone span { font-size: 12px; color: #888; }
+.drop-zone input[type=file] { display: none; }
+.q-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.q-table th { text-align: left; padding: 7px 10px; border-bottom: 1px solid #e0e0e0; font-weight: 500; color: #555; background: #f9f9f7; }
+.q-table td { padding: 7px 10px; border-bottom: 0.5px solid #f0f0f0; vertical-align: middle; }
+.q-text-cell { max-width: 360px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.detail-panel { background: #f9f9f7; border: 0.5px solid #ddd; border-radius: 8px; padding: 1rem; margin: 4px 0 8px; font-size: 12px; line-height: 1.7; white-space: pre-wrap; }
+.progress-wrap { background: #f0f0f0; border-radius: 100px; height: 6px; overflow: hidden; margin: 6px 0; }
+.progress-fill { height: 100%; background: #185FA5; border-radius: 100px; transition: width 0.3s; }
+.stat-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.stat-box { padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+.mode-tabs { display: flex; border: 0.5px solid #ddd; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+.mode-tab { flex: 1; padding: 9px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; border: none; background: #f9f9f7; color: #888; }
+.mode-tab.active { background: #185FA5; color: white; }
+.spinner-sm { display: inline-block; width: 11px; height: 11px; border: 1.5px solid #FAC775; border-top-color: #633806; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.error-box { background: #FCEBEB; border: 0.5px solid #F7C1C1; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #A32D2D; }
+.info-box { background: #E6F1FB; border: 0.5px solid #B5D4F4; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #185FA5; }
+.note { font-size: 11px; color: #888; margin-top: 5px; }
+.row-flex { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>薬剤師国試 法律適合性チェックツール</h1>
+  <p class="subtitle">2段階チェック方式：Haikuで初回判定 → Sonnetで最終検証</p>
+
+  <!-- 法令辞書 -->
+  <div class="card">
+    <div class="card-title">
+      法令辞書
+      <span class="badge" id="dictBadge" style="background:#e0e0e0;color:#555;">未取得</span>
+      <span id="dictDate" style="font-size:11px;color:#888;"></span>
+    </div>
+    <div class="row-flex" style="margin-bottom:10px;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-blue btn-sm" id="fetchBtn" onclick="fetchDict()">e-Govから最新法令を取得</button>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('manualFile').click()">手動でテキストを取り込む</button>
+      <input type="file" id="manualFile" accept=".txt" style="display:none" onchange="uploadManual(this.files[0])">
+      <button class="btn btn-outline btn-sm hidden" id="resetBtn" onclick="resetDict()">辞書をリセット</button>
+    </div>
+    <div id="fetchProgress" class="hidden" style="margin-bottom:8px;">
+      <div class="row-flex" style="justify-content:space-between;margin-bottom:3px;">
+        <span style="font-size:12px;color:#555;" id="fetchProgressText">取得中...</span>
+      </div>
+      <div class="progress-wrap"><div class="progress-fill" id="fetchProgressFill" style="width:5%"></div></div>
+    </div>
+    <div id="dictMsg" class="hidden" style="margin-bottom:8px;"></div>
+    <div class="law-grid" id="lawGrid"></div>
+    <p class="note" style="margin-top:8px;">※ e-Gov APIに収録されていない法令は「手動でテキストを取り込む」で追加できます。</p>
+  </div>
+
+  <!-- モード切替 -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tabManual" onclick="switchMode('manual')">手動入力（1問ずつ）</button>
+    <button class="mode-tab" id="tabCsv" onclick="switchMode('csv')">CSVファイル一括</button>
+  </div>
+
+  <!-- 手動モード -->
+  <div id="manualMode">
+    <div class="card">
+      <span class="field-lbl">問題文・選択肢・解答解説</span>
+      <textarea id="manualQ" rows="10" placeholder="問題文・選択肢・解答解説をここに入力してください。"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+        <button class="btn btn-blue" onclick="startManual()">AIチェックを開始（2段階） ↗</button>
+      </div>
+    </div>
+    <div id="manualResult" class="hidden">
+      <div class="card">
+        <div class="card-title">
+          チェック結果
+          <span id="manualJudgeBadge"></span>
+        </div>
+        <div id="manualStatus" style="font-size:12px;color:#888;margin-bottom:8px;"></div>
+        <div id="manualResultText" class="detail-panel" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSVモード -->
+  <div id="csvMode" class="hidden">
+    <div class="card" id="csvUpload">
+      <span class="field-lbl">CSVファイルを読み込む</span>
+      <p class="note" style="margin-bottom:10px;">1行1問題。1列に問題文・選択肢・解説がすべて含まれるCSV（UTF-8/Shift-JIS・JSON形式対応）</p>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('csvFile').click()">
+        <p>クリックまたはドラッグ＆ドロップ</p>
+        <span>.csvファイルを選択してください</span>
+        <input type="file" id="csvFile" accept=".csv" onchange="uploadCsv(this.files[0])">
+      </div>
+      <div id="csvUploadError" class="error-box hidden" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="card hidden" id="csvList">
+      <div class="row-flex" style="justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+        <div>
+          <span class="field-lbl" style="margin:0;" id="csvListTitle">問題一覧</span>
+          <div class="stat-row" id="csvStats"></div>
+        </div>
+        <div class="row-flex">
+          <button class="btn btn-outline btn-sm" onclick="resetCsv()">← CSVを変更</button>
+          <button class="btn btn-green btn-sm hidden" id="csvDlBtn" onclick="downloadCsv()">結果CSVダウンロード ↗</button>
+        </div>
+      </div>
+      <div id="csvProgress" class="hidden" style="margin-bottom:10px;">
+        <div class="row-flex" style="justify-content:space-between;margin-bottom:3px;">
+          <span style="font-size:12px;color:#555;" id="csvProgressText">処理中（2段階チェック）...</span>
+          <span style="font-size:12px;color:#185FA5;" id="csvProgressPct">0%</span>
+        </div>
+        <div class="progress-wrap"><div class="progress-fill" id="csvProgressFill" style="width:0%"></div></div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="q-table">
+          <thead><tr>
+            <th style="width:36px;">#</th>
+            <th>問題内容（先頭80文字）</th>
+            <th style="width:80px;">最終判定</th>
+            <th>概要</th>
+            <th style="width:54px;">詳細</th>
+          </tr></thead>
+          <tbody id="csvTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let jobIds = [];
+let pollTimer = null;
+
+// ===== 法令辞書 =====
+async function fetchDict() {
+  const btn = document.getElementById('fetchBtn');
+  btn.disabled = true;
+  document.getElementById('fetchProgress').classList.remove('hidden');
+  setDictMsg('info', '全法令一覧をe-Govから取得中...');
+  try {
+    const res = await fetch('/api/dict/fetch', { method: 'POST' });
+    const data = await res.json();
+    const ok = data.results.filter(r => r.ok).length;
+    const ng = data.results.filter(r => !r.ok).length;
+    setDictMsg('ok', '取得完了：' + ok + '件成功、' + ng + '件エラー（基準日：' + data.dict_date + '）');
+    await loadDictStatus();
+  } catch(e) {
+    setDictMsg('error', 'エラー：' + e.message);
+    btn.disabled = false;
+  }
+  document.getElementById('fetchProgress').classList.add('hidden');
+}
+
+async function loadDictStatus() {
+  try {
+    const res = await fetch('/api/dict');
+    const data = await res.json();
+    const laws = data.laws || [];
+    const meta = data.meta || {};
+    document.getElementById('dictBadge').textContent = data.fetched + '/' + data.total + '件取得済み';
+    document.getElementById('dictBadge').className = 'badge badge-set';
+    document.getElementById('dictDate').textContent = meta.dict_date ? '基準日：' + meta.dict_date : '';
+    if(data.total > 0) {
+      document.getElementById('resetBtn').classList.remove('hidden');
+      document.getElementById('fetchBtn').classList.add('hidden');
+    }
+    const grid = document.getElementById('lawGrid');
+    grid.innerHTML = laws.map(l => {
+      const cls = l.error ? 'error-item' : 'fetched';
+      const status = l.error ? '⚠ エラー' : '✓ 取得済み';
+      const color = l.error ? '#A32D2D' : '#3B6D11';
+      const chars = l.char_count ? l.char_count.toLocaleString() + '文字' : '';
+      return '<div class="law-item ' + cls + '"><div class="law-name">' + l.name + '</div><div style="text-align:right;"><div style="color:' + color + ';font-size:11px;">' + status + '</div><div style="font-size:10px;color:#888;">' + chars + '</div></div></div>';
+    }).join('');
+  } catch(e) {}
+}
+
+async function uploadManual(file) {
+  if(!file) return;
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch('/api/dict/manual', { method: 'POST', body: form });
+  const data = await res.json();
+  setDictMsg('ok', '「' + data.name + '」を追加しました（' + data.chars.toLocaleString() + '文字）');
+  await loadDictStatus();
+  document.getElementById('manualFile').value = '';
+}
+
+async function resetDict() {
+  if(!confirm('法令辞書をリセットしますか？')) return;
+  await fetch('/api/dict', { method: 'DELETE' });
+  document.getElementById('dictBadge').textContent = '未取得';
+  document.getElementById('dictBadge').style.cssText = 'background:#e0e0e0;color:#555;';
+  document.getElementById('dictBadge').className = 'badge';
+  document.getElementById('dictDate').textContent = '';
+  document.getElementById('resetBtn').classList.add('hidden');
+  document.getElementById('fetchBtn').classList.remove('hidden');
+  document.getElementById('fetchBtn').disabled = false;
+  document.getElementById('lawGrid').innerHTML = '';
+  document.getElementById('dictMsg').classList.add('hidden');
+}
+
+function setDictMsg(type, text) {
+  const el = document.getElementById('dictMsg');
+  el.className = type === 'error' ? 'error-box' : 'info-box';
+  el.textContent = text;
+  el.classList.remove('hidden');
+}
+
+// ===== モード切替 =====
+function switchMode(mode) {
+  document.getElementById('manualMode').classList.toggle('hidden', mode !== 'manual');
+  document.getElementById('csvMode').classList.toggle('hidden', mode !== 'csv');
+  document.getElementById('tabManual').classList.toggle('active', mode === 'manual');
+  document.getElementById('tabCsv').classList.toggle('active', mode === 'csv');
+}
+
+// ===== 手動モード =====
+async function startManual() {
+  const q = document.getElementById('manualQ').value.trim();
+  if(!q) { alert('問題文を入力してください'); return; }
+  const res = await fetch('/api/check', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question: q })
+  });
+  const data = await res.json();
+  document.getElementById('manualResult').classList.remove('hidden');
+  document.getElementById('manualStatus').textContent = '1回目チェック中（Haiku）...';
+  document.getElementById('manualResultText').style.display = 'none';
+  document.getElementById('manualJudgeBadge').innerHTML = '';
+  pollManual(data.job_id);
+}
+
+async function pollManual(jobId) {
+  const res = await fetch('/api/check/' + jobId);
+  const job = await res.json();
+  if(job.status === 'processing') {
+    document.getElementById('manualStatus').textContent = '2回目チェック中（Sonnet）...';
+    setTimeout(() => pollManual(jobId), 2000);
+  } else if(job.status === 'done') {
+    const labels = { ok: '✓ 問題なし', warn: '△ 要注意', ng: '✗ 不適合' };
+    const classes = { ok: 'badge-ok', warn: 'badge-warn', ng: 'badge-ng' };
+    document.getElementById('manualStatus').textContent = '2段階チェック完了';
+    document.getElementById('manualJudgeBadge').innerHTML = '<span class="badge ' + (classes[job.judge]||'badge-gray') + '">' + (labels[job.judge]||job.judge) + '</span>';
+    const el = document.getElementById('manualResultText');
+    el.textContent = job.result || '';
+    el.style.display = 'block';
+  } else if(job.status === 'error') {
+    document.getElementById('manualStatus').textContent = 'エラー：' + job.result;
+  } else {
+    setTimeout(() => pollManual(jobId), 2000);
+  }
+}
+
+// ===== CSVモード =====
+document.addEventListener('DOMContentLoaded', () => {
+  const zone = document.getElementById('dropZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('dragover'); uploadCsv(e.dataTransfer.files[0]); });
+  loadDictStatus();
+});
+
+async function uploadCsv(file) {
+  if(!file) return;
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch('/api/batch', { method: 'POST', body: form });
+  if(!res.ok) {
+    document.getElementById('csvUploadError').textContent = 'エラー：' + (await res.json()).detail;
+    document.getElementById('csvUploadError').classList.remove('hidden');
+    return;
+  }
+  const data = await res.json();
+  jobIds = data.job_ids;
+  document.getElementById('csvUploadError').classList.add('hidden');
+  document.getElementById('csvUpload').classList.add('hidden');
+  document.getElementById('csvList').classList.remove('hidden');
+  document.getElementById('csvListTitle').textContent = '問題一覧（全' + jobIds.length + '問）※1問あたり2回AIを呼び出します';
+  document.getElementById('csvProgress').classList.remove('hidden');
+  document.getElementById('csvFile').value = '';
+  renderCsvTable(jobIds.map((id, i) => ({ id, seq: i+1, question:'', status:'pending', judge:'', summary:'', result:'' })));
+  pollBatch();
+}
+
+async function pollBatch() {
+  if(!jobIds.length) return;
+  const res = await fetch('/api/batch/status?ids=' + jobIds.join(','));
+  const data = await res.json();
+  renderCsvTable(data.jobs.map((j, i) => ({ ...j, seq: i+1 })));
+  updateStats(data.jobs);
+  const pct = Math.round((data.done + data.error) / data.total * 100);
+  document.getElementById('csvProgressFill').style.width = pct + '%';
+  document.getElementById('csvProgressPct').textContent = pct + '%';
+  document.getElementById('csvProgressText').textContent = '完了 ' + (data.done + data.error) + '/' + data.total + '問（2段階チェック中）';
+  if(data.pending > 0) {
+    pollTimer = setTimeout(pollBatch, 3000);
+  } else {
+    document.getElementById('csvDlBtn').classList.remove('hidden');
+    document.getElementById('csvProgressText').textContent = 'チェック完了（' + data.done + '問完了、' + data.error + '問エラー）';
+  }
+}
+
+function renderCsvTable(jobs) {
+  document.getElementById('csvTableBody').innerHTML = jobs.map(j => {
+    const preview = (j.formatted || j.question || '').replace(/\n/g,' ').slice(0,80);
+    return '<tr><td style="color:#aaa;">' + j.seq + '</td><td><div class="q-text-cell">' + escH(preview) + (preview.length>=80?'…':'') + '</div></td><td>' + csvBadge(j) + '</td><td style="font-size:11px;color:#666;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escH(j.summary||'') + '</td><td><button class="btn btn-outline btn-sm" onclick="toggleDetail(\'d' + j.id + '\')" ' + (j.result?'':'disabled') + '>表示</button></td></tr><tr id="d' + j.id + '" class="hidden"><td colspan="5" style="padding:0 10px 10px;"><div class="detail-panel">' + escH(j.result||'') + '</div></td></tr>';
+  }).join('');
+}
+
+function csvBadge(j) {
+  if(j.status==='pending') return '<span class="badge badge-gray">待機中</span>';
+  if(j.status==='processing') return '<span class="badge badge-checking"><span class="spinner-sm"></span> チェック中</span>';
+  if(j.status==='error') return '<span class="badge badge-ng">エラー</span>';
+  if(j.judge==='ok')   return '<span class="badge badge-ok">問題なし</span>';
+  if(j.judge==='warn') return '<span class="badge badge-warn">要注意</span>';
+  if(j.judge==='ng')   return '<span class="badge badge-ng">不適合</span>';
+  return '<span class="badge badge-gray">-</span>';
+}
+
+function updateStats(jobs) {
+  const ok   = jobs.filter(j=>j.judge==='ok').length;
+  const warn = jobs.filter(j=>j.judge==='warn').length;
+  const ng   = jobs.filter(j=>j.judge==='ng').length;
+  const err  = jobs.filter(j=>j.status==='error').length;
+  const done = jobs.filter(j=>j.status==='done').length;
+  document.getElementById('csvStats').innerHTML =
+    '<span class="stat-box" style="background:#f0f0f0;color:#555;">全' + jobs.length + '問</span>' +
+    '<span class="stat-box" style="background:#EAF3DE;color:#27500A;">OK ' + ok + '</span>' +
+    '<span class="stat-box" style="background:#FAEEDA;color:#633806;">要注意 ' + warn + '</span>' +
+    '<span class="stat-box" style="background:#FCEBEB;color:#A32D2D;">不適合 ' + ng + '</span>' +
+    (err ? '<span class="stat-box" style="background:#F7C1C1;color:#791F1F;">エラー ' + err + '</span>' : '') +
+    '<span class="stat-box" style="background:#E6F1FB;color:#185FA5;">完了 ' + done + '/' + jobs.length + '</span>';
+}
+
+function downloadCsv() {
+  window.location.href = '/api/batch/download?ids=' + jobIds.join(',');
+}
+
+function resetCsv() {
+  clearTimeout(pollTimer);
+  jobIds = [];
+  document.getElementById('csvUpload').classList.remove('hidden');
+  document.getElementById('csvList').classList.add('hidden');
+  document.getElementById('csvDlBtn').classList.add('hidden');
+  document.getElementById('csvProgress').classList.add('hidden');
+}
+
+function toggleDetail(id) {
+  const row = document.getElementById(id);
+  if(row) row.classList.toggle('hidden');
+}
+
+function escH(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

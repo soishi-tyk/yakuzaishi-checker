@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Pharmacist National Exam Law Compliance Checker v12"
+abstract: >
+  **{Insert one-sentence description of the software in English here}**
+authors:
+  - family-names: "**{姓をここに入れる}**"
+    given-names: "**{名をここに入れる}**"
+    affiliation: "Tokyo University of Pharmacy and Life Sciences"
+    email: soishi@toyaku.ac.jp
+  - family-names: "**{共著者の姓をここに入れる（不要なら削除）}**"
+    given-names: "**{共著者の名をここに入れる（不要なら削除）}**"
+    affiliation: "**{共著者の所属をここに入れる}**"
+repository-code: "https://github.com/**{GitHubユーザー名をここに入れる}**/yakuzaishi-checker"
+license: MIT
+version: "12.0.0"
+date-released: "2026-**{公開月日をここに入れる MM-DD}**"
+keywords:
+  - pharmacist
+  - national examination
+  - law compliance
+  - large language model
+  - ChromaDB
+  - vector search
+  - Claude
+  - Anthropic
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "**{姓をここに入れる}**"
+      given-names: "**{名をここに入れる}**"
+      affiliation: "Tokyo University of Pharmacy and Life Sciences"
+  title: "**{論文タイトル（英語）をここに入れる}**"
+  journal: "**{JMIR journal name をここに入れる（例: JMIR Medical Education）}**"
+  year: **{出版年をここに入れる}**
+  doi: "**{DOIをここに入れる}**"

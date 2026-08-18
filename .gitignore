@@ -1,0 +1,29 @@
+# APIキー・環境設定（絶対にコミットしない）
+.env
+
+# データベース（自動生成される）
+laws.db
+chroma_db/
+
+# Pythonキャッシュ
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 仮想環境
+venv/
+.venv/
+env/
+
+# OS生成ファイル
+.DS_Store
+Thumbs.db
+
+# エディタ設定
+.vscode/
+.idea/
+
+# アップロードされた一時ファイル
+uploads/
+results/
