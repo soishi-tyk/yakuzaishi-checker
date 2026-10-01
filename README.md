@@ -164,7 +164,7 @@ MIT License — 詳細は [LICENSE](LICENSE) を参照。
 本ソフトウェアを研究に利用する場合は以下を引用してください：
 
 ```
-**{著者名をここに入れる}** (**{出版年をここに入れる}**). **{論文タイトル（英語）をここに入れる}**. *JMIR* **{巻号・DOIをここに入れる}**
+> Manuscript in preparation. Citation details will be added upon publication.
 ```
 
 ---
@@ -335,5 +335,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 If you use this software in your research, please cite:
 
 ```
-**{Insert author name(s) here}** (**{Insert publication year here}**). **{Insert paper title (English) here}**. *JMIR* **{Insert volume/issue/DOI here}**
+> Manuscript in preparation. Citation details will be added upon publication.
 ```
