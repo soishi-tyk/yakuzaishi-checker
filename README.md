@@ -164,7 +164,7 @@ MIT License — 詳細は [LICENSE](LICENSE) を参照。
 本ソフトウェアを研究に利用する場合は以下を引用してください：
 
 ```
-> Manuscript in preparation. Citation details will be added upon publication.
+Manuscript in preparation. Citation details will be added upon publication.
 ```
 
 ---
@@ -335,5 +335,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 If you use this software in your research, please cite:
 
 ```
-> Manuscript in preparation. Citation details will be added upon publication.
+Manuscript in preparation. Citation details will be added upon publication.
 ```
