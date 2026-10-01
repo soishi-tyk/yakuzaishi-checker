@@ -1,9 +1,6 @@
 # 薬剤師国試 法律適合性チェッカー v12
 
-> **{ここに論文タイトル（日本語）を入れる}**  
-> **{著者名をここに入れる}**, **{共著者名をここに入れる}**  
-> Tokyo University of Pharmacy and Life Sciences  
-> *JMIR* **{巻号・年・DOIをここに入れる}**
+> Manuscript in preparation. Citation details will be added upon publication. 
 
 ---
 
@@ -79,7 +76,7 @@ yakuzaishi-checker/
 **1. リポジトリをクローン**
 
 ```bash
-git clone https://github.com/**{GitHubユーザー名をここに入れる}**/yakuzaishi-checker.git
+git clone https://github.com/soishi-tyk/yakuzaishi-checker.git
 cd yakuzaishi-checker
 ```
 
@@ -176,11 +173,7 @@ MIT License — 詳細は [LICENSE](LICENSE) を参照。
 
 # Pharmacist National Exam Law Compliance Checker v12
 
-> **{Insert paper title (English) here}**  
-> **{Insert author name(s) here}**  
-> Tokyo University of Pharmacy and Life Sciences  
-> *JMIR* **{Insert volume/issue/year/DOI here}**
-
+> Manuscript in preparation. Citation details will be added upon publication.
 ---
 
 ## Overview
@@ -254,7 +247,7 @@ yakuzaishi-checker/
 **1. Clone the repository**
 
 ```bash
-git clone https://github.com/**{Insert GitHub username here}**/yakuzaishi-checker.git
+git clone https://github.com/soishi-tyk/yakuzaishi-checker.git
 cd yakuzaishi-checker
 ```
 
