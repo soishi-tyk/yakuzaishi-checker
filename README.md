@@ -51,6 +51,7 @@ Step 2: claude-sonnet-4-6 — 批判的検証・最終判定
 yakuzaishi-checker/
 ├── main.py              ← FastAPIサーバー
 ├── worker.py            ← バックグラウンドAIチェック（2段階）
+├── test_worker.py       ← 判定抽出のテスト（11件）
 ├── preprocess_laws.py   ← ChromaDB構築スクリプト（初回のみ実行）
 ├── database.py          ← SQLiteデータベース管理
 ├── frontend/
@@ -222,6 +223,7 @@ Result CSV (OK / Caution / Non-compliant)
 yakuzaishi-checker/
 ├── main.py              ← FastAPI server
 ├── worker.py            ← Background AI checking (two-stage)
+├── test_worker.py       ← Verdict-extraction tests (11 cases)
 ├── preprocess_laws.py   ← ChromaDB builder (run once after law retrieval)
 ├── database.py          ← SQLite database management
 ├── frontend/
