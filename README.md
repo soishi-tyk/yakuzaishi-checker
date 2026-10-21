@@ -166,6 +166,7 @@ MIT License — 詳細は [LICENSE](LICENSE) を参照。
 
 ```
 Manuscript in preparation. Citation details will be added upon publication.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23525879.svg)](https://doi.org/10.5281/zenodo.23525879)
 ```
 
 ---
@@ -338,4 +339,5 @@ If you use this software in your research, please cite:
 
 ```
 Manuscript in preparation. Citation details will be added upon publication.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23525879.svg)](https://doi.org/10.5281/zenodo.23525879)
 ```
