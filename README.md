@@ -1,6 +1,8 @@
 # 薬剤師国試 法律適合性チェッカー v12
 
-> Manuscript in preparation. Citation details will be added upon publication. 
+> Manuscript in preparation. Citation details will be added upon publication.
+>
+> [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23525879.svg)](https://doi.org/10.5281/zenodo.23525879)
 
 ---
 
@@ -165,8 +167,7 @@ MIT License — 詳細は [LICENSE](LICENSE) を参照。
 本ソフトウェアを研究に利用する場合は以下を引用してください：
 
 ```
-Manuscript in preparation. Citation details will be added upon publication.
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23525879.svg)](https://doi.org/10.5281/zenodo.23525879)
+Oishi S, Hanai A. Pharmacist National Exam Law Compliance Checker v12 (v12.0.0) [Software]. Zenodo. 2026. doi:10.5281/zenodo.23525879
 ```
 
 ---
@@ -338,6 +339,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 If you use this software in your research, please cite:
 
 ```
-Manuscript in preparation. Citation details will be added upon publication.
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23525879.svg)](https://doi.org/10.5281/zenodo.23525879)
+Oishi S, Hanai A. Pharmacist National Exam Law Compliance Checker v12 (v12.0.0) [Software]. Zenodo. 2026. doi:10.5281/zenodo.23525879
 ```
